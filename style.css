@@ -405,6 +405,7 @@ section {
   position: relative;
   display: flex;
   justify-content: center;
+  animation: float 4s ease-in-out infinite;
 }
 
 .about-image {
@@ -441,10 +442,6 @@ section {
 .about-image-wrapper:hover .about-image-border {
   top: 12px;
   left: 12px;
-}
-
-.about-image-wrapper {
-  animation: float 4s ease-in-out infinite;
 }
 
 @keyframes float {
@@ -891,8 +888,6 @@ footer {
 
   .hamburger {
     display: block;
-    cursor: none;
-    transition: transform 0.3s ease;
     z-index: 101;
   }
 
