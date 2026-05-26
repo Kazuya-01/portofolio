@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Syarif | Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+
+  <div id="particles-canvas"></div>
+
+  <nav>
+    <div class="container nav-container">
+      <a href="#" class="logo">&lt;Syarif /&gt;</a>
+      <ul class="nav-links">
+        <li><a href="#about" class="nav-link">About</a></li>
+        <li><a href="#skills" class="nav-link">Skills</a></li>
+        <li><a href="#projects" class="nav-link">Projects</a></li>
+        <li><a href="#experience" class="nav-link">Experience</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
+  </nav>
+
+  <section id="hero">
+    <div class="container hero-content">
+      <div class="hero-badge">Available for work</div>
+      <p class="hero-greeting">Halo, nama saya</p>
+      <h1 class="hero-name">Syarif</h1>
+      <div class="hero-title-wrapper">
+        <span class="hero-title">Saya membangun </span>
+        <span class="typing-text"></span>
+        <span class="cursor-blink">|</span>
+      </div>
+      <p class="hero-desc">Lulusan Sistem Informasi dengan pengalaman dalam pengembangan web dan mobile, manajemen basis data, serta analisis data. Mari wujudkan ide menjadi solusi digital yang berdampak.</p>
+      <div class="hero-buttons">
+        <a href="#projects" class="btn btn-primary">
+          <span>Lihat Karyaku</span>
+          <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <span>Hubungi Saya</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num" data-target="4">0</span>
+          <span class="stat-label">Projects</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-target="5">0</span>
+          <span class="stat-label">Years Journey</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-target="8">0</span>
+          <span class="stat-label">Technologies</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-top">
+        <span class="section-number">01.</span>
+        <h2 class="section-title">About Me</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-content">
+        <div class="about-text fade-in">
+          <p>Halo! Saya Syarif, lulusan <span class="highlight">Sistem Informasi</span> dari Universitas Sains Indonesia (USI) dengan ketertarikan kuat di bidang manajemen basis data, pengembangan aplikasi web dan mobile, serta analisis data. Saya terbiasa mengubah masalah kompleks menjadi solusi digital yang fungsional dan berdampak.</p>
+          <p>Dengan IPK 3.52/4.00 dan mata kuliah yang mencakup sistem basis data, data mining, pemrograman web, dan pengembangan mobile, saya membangun fondasi yang kokoh dalam PHP, Laravel, React Native, dan alat visualisasi data. Saya percaya teknologi harus menyelesaikan masalah nyata — bukan sekadar tampil menarik.</p>
+          <p>Selama kuliah, saya aktif sebagai sekretaris program studi yang mengelola dokumentasi akademik dan koordinasi dengan dosen, serta berkontribusi dalam kegiatan literasi melalui organisasi.</p>
+        </div>
+        <div class="about-image-wrapper fade-in">
+          <div class="about-image">
+            <div class="about-image-placeholder">
+              <i class="fas fa-user-astronaut"></i>
+            </div>
+          </div>
+          <div class="about-image-border"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="container">
+      <div class="section-top">
+        <span class="section-number">02.</span>
+        <h2 class="section-title">My Skills</h2>
+        <div class="section-line"></div>
+      </div>
+      <p class="section-desc">Teknologi dan alat yang saya gunakan untuk membangun solusi digital</p>
+      <div class="skills-grid">
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-php"></i></div>
+          <span class="skill-name">PHP/Laravel <span class="skill-pct">88%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-html5"></i></div>
+          <span class="skill-name">HTML/CSS <span class="skill-pct">90%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-js"></i></div>
+          <span class="skill-name">JavaScript <span class="skill-pct">75%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-css3-alt"></i></div>
+          <span class="skill-name">Tailwind CSS <span class="skill-pct">82%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fas fa-bolt"></i></div>
+          <span class="skill-name">Alpine.js <span class="skill-pct">72%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:72%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-react"></i></div>
+          <span class="skill-name">React Native <span class="skill-pct">68%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:68%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fas fa-database"></i></div>
+          <span class="skill-name">MySQL <span class="skill-pct">78%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-git-alt"></i></div>
+          <span class="skill-name">Git <span class="skill-pct">82%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fas fa-file-excel"></i></div>
+          <span class="skill-name">Excel/Office <span class="skill-pct">85%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+        </div>
+        <div class="skill-card fade-in">
+          <div class="skill-icon"><i class="fab fa-figma"></i></div>
+          <span class="skill-name">Figma <span class="skill-pct">62%</span></span>
+          <div class="skill-bar"><div class="skill-fill" style="width:62%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="container">
+      <div class="section-top">
+        <span class="section-number">03.</span>
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card fade-in">
+          <div class="project-img" style="background: linear-gradient(135deg, rgba(102,126,234,0.85) 0%, rgba(118,75,162,0.85) 100%), url('https://socialify.git.ci/Kazuya-01/campuslms/image?description=1&font=Inter&forks=1&issues=1&language=1&name=0&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark') center/cover no-repeat;">
+            <div class="project-overlay">
+              <a href="https://github.com/Kazuya-01/campuslms" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+              <a href="https://github.com/Kazuya-01/campuslms" target="_blank" class="project-github"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <p class="project-type">E-Learning</p>
+            <h3>CampusLMS</h3>
+            <p>Platform e-learning kampus multi-role berbasis Laravel 13 — kelas virtual, tugas interaktif, quiz dengan sistem anti-cheat canggih, forum diskusi, absensi QR Code, dan sertifikat PDF. Solusi digital untuk pendidikan modern.</p>
+            <div class="project-tech">
+              <span>Laravel 13</span><span>PHP</span><span>Tailwind</span><span>Alpine.js</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card fade-in">
+          <div class="project-img" style="background: linear-gradient(135deg, rgba(240,147,251,0.85) 0%, rgba(245,87,108,0.85) 100%), url('https://socialify.git.ci/Kazuya-01/absensi-korma/image?description=1&font=Inter&forks=1&issues=1&language=1&name=0&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark') center/cover no-repeat;">
+            <div class="project-overlay">
+              <a href="https://github.com/Kazuya-01/absensi-korma" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+              <a href="https://github.com/Kazuya-01/absensi-korma" target="_blank" class="project-github"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <p class="project-type">Attendance</p>
+            <h3>Absensi Korma</h3>
+            <p>Sistem manajemen absensi digital berbasis Laravel dengan fitur multi-role, rekap kehadiran otomatis, laporan real-time, dan dashboard yang intuitif. Solusi cerdas untuk pencatatan kehadiran yang efisien.</p>
+            <div class="project-tech">
+              <span>Laravel</span><span>PHP</span><span>MySQL</span><span>Bootstrap</span>
+            </div>
+          </div>
+        </div>
+        <div class="project-card fade-in">
+          <div class="project-img" style="background: linear-gradient(135deg, rgba(79,172,254,0.85) 0%, rgba(0,242,254,0.85) 100%), url('https://socialify.git.ci/Kazuya-01/pokedex/image?description=1&font=Inter&forks=1&issues=1&language=1&name=0&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark') center/cover no-repeat;">
+            <div class="project-overlay">
+              <a href="https://github.com/Kazuya-01/pokedex" target="_blank" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+              <a href="https://github.com/Kazuya-01/pokedex" target="_blank" class="project-github"><i class="fab fa-github"></i></a>
+            </div>
+          </div>
+          <div class="project-body">
+            <p class="project-type">Interactive</p>
+            <h3>Pokédex</h3>
+            <p>Web Pokédex interaktif berbasis Laravel yang menampilkan database Pokemon lengkap — fitur pencarian real-time, filter tipe, statistik detail, dan tampilan responsif yang memanjakan mata para trainer.</p>
+            <div class="project-tech">
+              <span>Laravel</span><span>PHP</span><span>MySQL</span><span>JavaScript</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="container">
+      <div class="section-top">
+        <span class="section-number">04.</span>
+        <h2 class="section-title">Experience</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item fade-in">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">2021 - 2026</div>
+            <h3>Sekretaris Program Studi</h3>
+            <p class="timeline-company">Sistem Informasi — Universitas Sains Indonesia</p>
+            <p>Mengelola catatan kehadiran mahasiswa dan menyusun laporan untuk dosen. Mengarsipkan dokumen akademik serta mengkoordinasikan komunikasi resmi antara prodi dan mahasiswa.</p>
+          </div>
+        </div>
+        <div class="timeline-item fade-in">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-date">2018 - 2019</div>
+            <h3>Ketua Ekstrakurikuler Perpustakaan</h3>
+            <p class="timeline-company">SMA Negeri 1 Cicurug</p>
+            <p>Memimpin perencanaan dan pelaksanaan program literasi. Mengorganisir 30+ anggota, mendelegasikan tugas penataan buku dan pencatatan peminjaman, serta mengelola event distribusi buku paket.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="contact-wrapper fade-in">
+        <span class="section-number" style="text-align:center;display:block;">05.</span>
+        <h2 class="section-title">Let's Work Together</h2>
+        <p class="contact-desc">Saya terbuka untuk proyek freelance, magang, dan kesempatan kerja penuh waktu. Jika Anda memiliki proyek atau sekadar ingin terhubung, jangan ragu untuk menghubungi.</p>
+        <a href="mailto:muhammadsyarifudin93645@gmail.com" class="btn btn-primary contact-btn">
+          <i class="fas fa-paper-plane"></i>
+          <span>Sapa Saya</span>
+        </a>
+        <div class="contact-social">
+          <a href="https://github.com/syarifudin" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/syarif" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+          <a href="mailto:muhammadsyarifudin93645@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+          <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Designed & Built by Syarif</p>
+    <p class="footer-small">&copy; 2026 All rights reserved</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
