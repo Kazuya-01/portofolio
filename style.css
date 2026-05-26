@@ -395,7 +395,7 @@ section {
   overflow: hidden;
   position: relative;
   z-index: 2;
-  background: linear-gradient(135deg, #1a1a1a, #111);
+  background: #0a0a0a;
   border: 1px solid rgba(255,255,255,0.05);
 }
 
