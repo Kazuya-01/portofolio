@@ -399,14 +399,12 @@ section {
   border: 1px solid rgba(255,255,255,0.05);
 }
 
-.about-image-placeholder {
+.about-avatar {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 5rem;
-  color: #333;
+  object-fit: cover;
+  display: block;
+  background: #0a0a0a;
 }
 
 .about-image-border {
@@ -424,6 +422,15 @@ section {
 .about-image-wrapper:hover .about-image-border {
   top: 12px;
   left: 12px;
+}
+
+.about-image-wrapper {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 /* Skills */
