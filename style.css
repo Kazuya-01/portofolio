@@ -145,6 +145,25 @@ nav {
   color: #fff;
   font-size: 1.3rem;
   cursor: none;
+  transition: transform 0.3s ease;
+}
+
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.nav-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* Hero */
@@ -822,6 +841,15 @@ footer {
     font-size: 1.3rem;
   }
 
+  .hero-greeting {
+    font-size: 0.85rem;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    padding: 0 12px;
+  }
+
   .hero-stats {
     gap: 30px;
     margin-top: 50px;
@@ -832,7 +860,6 @@ footer {
   }
 
   .nav-links {
-    display: none;
     position: absolute;
     top: 70px;
     left: 0;
@@ -843,15 +870,30 @@ footer {
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     padding: 24px;
     gap: 20px;
+    transform: translateY(-20px);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
   }
 
   .nav-links.active {
-    display: flex;
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 8px 0;
   }
 
   .hamburger {
     display: block;
     cursor: none;
+    transition: transform 0.3s ease;
+    z-index: 101;
   }
 
   .about-content {
@@ -863,12 +905,83 @@ footer {
     order: -1;
   }
 
+  .about-text p {
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .section-top {
+    justify-content: center;
+  }
+
   .section-title {
     font-size: 1.5rem;
   }
 
+  .section-desc {
+    font-size: 0.9rem;
+    padding: 0 16px;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .skill-card {
+    padding: 20px 12px;
+  }
+
+  .skill-icon {
+    font-size: 2rem;
+  }
+
+  .skill-name {
+    font-size: 0.8rem;
+  }
+
   .projects-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .project-body {
+    padding: 18px;
+  }
+
+  .project-body h3 {
+    font-size: 1.1rem;
+  }
+
+  .project-body p {
+    font-size: 0.85rem;
+  }
+
+  .timeline-item {
+    padding-left: 20px;
+  }
+
+  .timeline-content {
+    padding: 18px 20px;
+  }
+
+  .timeline-content h3 {
+    font-size: 1.05rem;
+  }
+
+  .contact-desc {
+    font-size: 0.95rem;
+    padding: 0 12px;
+  }
+
+  .contact-social {
+    gap: 16px;
+  }
+
+  .social-link {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
   }
 
   .cursor, .cursor-follower {
@@ -889,19 +1002,127 @@ footer {
     font-size: 2.4rem;
   }
 
+  .hero-title-wrapper {
+    font-size: 1.1rem;
+    height: 36px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
   .hero-stats {
     gap: 20px;
     flex-direction: column;
+    margin-top: 40px;
+  }
+
+  .stat-num {
+    font-size: 2rem;
   }
 
   .btn {
     width: 100%;
     justify-content: center;
+    padding: 14px 24px;
+    font-size: 0.9rem;
+  }
+
+  .btn-primary i {
+    display: inline-flex;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .skill-card {
+    padding: 16px 10px;
+  }
+
+  .section-top {
+    gap: 10px;
+  }
+
+  .section-number {
+    font-size: 0.85rem;
+  }
+
+  .section-line {
+    display: none;
   }
 
   section {
     padding: 80px 0;
   }
+
+  .timeline {
+    padding-left: 20px;
+  }
+
+  .contact-btn {
+    padding: 14px 32px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Scroll Indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+
+@media (max-width: 768px) {
+  .scroll-indicator {
+    display: flex;
+  }
+}
+
+.scroll-indicator:hover {
+  opacity: 0.8;
+}
+
+.scroll-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #888;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+
+.scroll-mouse {
+  width: 24px;
+  height: 38px;
+  border: 2px solid #888;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.scroll-dot {
+  width: 3px;
+  height: 8px;
+  background: #64ffda;
+  border-radius: 2px;
+  animation: scrollDot 2s infinite;
+}
+
+@keyframes scrollDot {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(12px); }
 }
 
 /* Glow effect on hover for interactive elements */

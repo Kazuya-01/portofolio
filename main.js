@@ -101,16 +101,33 @@ if (typingText) typeEffect();
 // === Hamburger ===
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
+const navOverlay = document.querySelector('.nav-overlay');
+const hamburgerIcon = hamburger?.querySelector('i');
 
-if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-  });
+function closeNav() {
+  navLinks?.classList.remove('active');
+  navOverlay?.classList.remove('active');
+  if (hamburgerIcon) {
+    hamburgerIcon.classList.add('fa-bars');
+    hamburgerIcon.classList.remove('fa-times');
+  }
+}
+
+function toggleNav() {
+  navLinks?.classList.toggle('active');
+  navOverlay?.classList.toggle('active');
+  if (hamburgerIcon) {
+    hamburgerIcon.classList.toggle('fa-bars');
+    hamburgerIcon.classList.toggle('fa-times');
+  }
+}
+
+if (hamburger && navLinks && hamburgerIcon) {
+  hamburger.addEventListener('click', toggleNav);
+  navOverlay?.addEventListener('click', closeNav);
 
   document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('active');
-    });
+    link.addEventListener('click', closeNav);
   });
 }
 
