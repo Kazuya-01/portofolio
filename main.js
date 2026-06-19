@@ -3,14 +3,14 @@ if (typeof particlesJS !== 'undefined') {
   particlesJS('particles-canvas', {
     particles: {
       number: { value: 50, density: { enable: true, value_area: 800 } },
-      color: { value: '#64ffda' },
+      color: { value: '#ff4757' },
       shape: { type: 'circle' },
       opacity: { value: 0.12, random: true },
       size: { value: 2, random: true },
       line_linked: {
         enable: true,
         distance: 120,
-        color: '#64ffda',
+        color: '#ff4757',
         opacity: 0.06,
         width: 1,
       },
@@ -52,19 +52,19 @@ if (cursor && cursorFollower) {
     el.addEventListener('mouseenter', () => {
       cursor.style.transform = 'translate(-50%, -50%) scale(2)';
       cursorFollower.style.transform = 'translate(-50%, -50%) scale(1.5)';
-      cursorFollower.style.borderColor = 'rgba(100, 255, 218, 0.6)';
+      cursorFollower.style.borderColor = 'rgba(255, 71, 87, 0.6)';
     });
     el.addEventListener('mouseleave', () => {
       cursor.style.transform = 'translate(-50%, -50%) scale(1)';
       cursorFollower.style.transform = 'translate(-50%, -50%) scale(1)';
-      cursorFollower.style.borderColor = 'rgba(100, 255, 218, 0.3)';
+      cursorFollower.style.borderColor = 'rgba(255, 71, 87, 0.3)';
     });
   });
 }
 
 // === Typing Effect ===
 const typingText = document.querySelector('.typing-text');
-const words = ['Web Applications.', 'Mobile Apps.', 'Laravel Apps.', 'Digital Products.'];
+const words = ['Laravel & PHP.', 'React Native.', 'Anime & Code.', 'Database & API.'];
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -147,6 +147,17 @@ const observer = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
+// === Stagger fade-in observer ===
+const staggerObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.fade-in-stagger').forEach(el => staggerObserver.observe(el));
+
 // === Skill Bars Animation ===
 const skillObserver = new IntersectionObserver(
   entries => {
@@ -174,7 +185,10 @@ const counterObserver = new IntersectionObserver(
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const num = entry.target;
-        const target = parseInt(num.getAttribute('data-target'));
+        let target = parseInt(num.getAttribute('data-target'));
+        if (num.getAttribute('data-target') === 'auto-projects') {
+          target = document.querySelectorAll('.project-card').length;
+        }
         const duration = 2000;
         const step = Math.ceil(target / (duration / 16));
         let current = 0;
@@ -182,7 +196,7 @@ const counterObserver = new IntersectionObserver(
         const updateCounter = () => {
           current += step;
           if (current >= target) {
-            num.textContent = target + '+';
+            num.textContent = target + (num.hasAttribute('data-no-plus') ? '' : '+');
             return;
           }
           num.textContent = current;
@@ -207,4 +221,22 @@ window.addEventListener('load', () => {
       el.classList.add('visible');
     }
   });
+  document.querySelectorAll('.fade-in-stagger').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      el.classList.add('visible');
+    }
+  });
 });
+
+// === Scroll progress bar ===
+const navProgress = document.querySelector('.nav-progress');
+if (navProgress) {
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    navProgress.style.width = (scrollTop / docHeight) * 100 + '%';
+  });
+}
+
+
