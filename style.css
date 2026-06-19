@@ -1976,107 +1976,176 @@ footer {
 
 @media (max-width: 480px) {
   .hero-name {
-    font-size: 2.4rem;
+    font-size: 2rem;
   }
 
   .hero-title-wrapper {
-    font-size: 1.1rem;
-    height: 36px;
+    font-size: 1rem;
+    height: 28px;
+  }
+
+  .hero-greeting {
+    font-size: 0.75rem;
+  }
+
+  .hero-desc {
+    font-size: 0.88rem;
+  }
+
+  .hero-badge {
+    font-size: 0.7rem;
+    padding: 4px 14px;
   }
 
   .hero-buttons {
     flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
   }
 
   .hero-content {
-    padding-bottom: 120px;
+    padding-bottom: 80px;
   }
 
   .hero-stats {
-    gap: 16px;
+    gap: 12px;
     flex-direction: column;
-    margin-top: 32px;
+    margin-top: 24px;
   }
 
   .stat-num {
-    font-size: 1.7rem;
+    font-size: 1.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
   }
 
   .btn {
     width: 100%;
     justify-content: center;
-    padding: 14px 24px;
-    font-size: 0.9rem;
+    padding: 12px 20px;
+    font-size: 0.85rem;
   }
 
   .btn-primary i {
     display: inline-flex;
   }
 
-  .skills-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+  .about-image {
+    width: 180px;
+    height: 206px;
   }
 
-  .skill-focus-areas {
-    gap: 5px;
+  .about-image-border {
+    width: 180px;
+    height: 206px;
+    top: 10px;
+    left: 10px;
+  }
+
+  .about-card {
+    padding: 20px 16px;
+  }
+
+  .about-text p {
+    font-size: 0.88rem;
     margin-bottom: 14px;
   }
 
-  .skill-focus-item {
-    padding: 4px 10px;
-    font-size: 0.68rem;
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .section-desc {
+    font-size: 0.85rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .skill-icon {
+    font-size: 1.6rem;
+  }
+
+  .skill-name {
+    font-size: 0.72rem;
+  }
+
+  .skill-focus-areas {
     gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  .skill-focus-item {
+    padding: 3px 8px;
+    font-size: 0.62rem;
+    gap: 3px;
+  }
+
+  .skill-stats-row {
+    padding: 10px 10px;
+    gap: 8px;
+  }
+
+  .skill-stat-num {
+    font-size: 1rem;
+  }
+
+  .skill-stat-label {
+    font-size: 0.55rem;
+  }
+
+  .skill-quick-tag {
+    font-size: 0.65rem;
+    padding: 3px 10px;
   }
 
   .skill-learning {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     padding: 6px 10px;
     gap: 6px;
   }
 
   .skill-card {
-    padding: 16px 10px;
+    padding: 14px 8px;
+    gap: 8px;
   }
 
   .skills-extra {
-    margin-top: 32px;
-    gap: 24px;
+    margin-top: 28px;
+    gap: 20px;
   }
 
   .skills-subtitle {
-    font-size: 0.9rem;
-    margin-bottom: 14px;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
   }
 
   .tools-grid {
-    gap: 8px;
+    gap: 6px;
   }
 
   .tool-badge {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    gap: 6px;
-    border-radius: 8px;
-  }
-
-  .soft-skills-grid {
-    gap: 8px;
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    gap: 5px;
   }
 
   .soft-skill-tag {
-    padding: 5px 14px;
-    font-size: 0.75rem;
+    padding: 5px 12px;
+    font-size: 0.72rem;
   }
 
   .section-top {
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 32px;
   }
 
   .section-number {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
   }
 
   .section-line {
@@ -2084,74 +2153,114 @@ footer {
   }
 
   section {
-    padding: 80px 0;
+    padding: 60px 0;
   }
 
   .timeline {
-    padding-left: 18px;
+    padding-left: 14px;
   }
 
   .timeline-item {
-    padding-left: 18px;
-    margin-bottom: 28px;
+    padding-left: 14px;
+    margin-bottom: 24px;
   }
 
   .timeline-dot {
-    left: -14px;
-    width: 12px;
-    height: 12px;
+    left: -10px;
+    width: 10px;
+    height: 10px;
     border-width: 2px;
   }
 
+  .timeline-content {
+    padding: 14px 16px;
+  }
+
+  .timeline-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .timeline-content > p {
+    font-size: 0.8rem;
+  }
+
   .timeline-icon {
-    width: 32px;
-    height: 32px;
-    font-size: 0.85rem;
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
   }
 
   .timeline-header {
-    gap: 10px;
-  }
-
-  .timeline-achievements {
-    padding: 10px 12px;
-  }
-
-  .timeline-achievement {
-    font-size: 0.75rem;
     gap: 8px;
   }
 
-  .contact-badge {
-    font-size: 0.68rem;
-    padding: 4px 12px;
+  .timeline-achievements {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+
+  .timeline-achievement {
+    font-size: 0.72rem;
     gap: 6px;
   }
 
+  .timeline-tag {
+    font-size: 0.6rem;
+    padding: 2px 8px;
+  }
+
+  .contact-badge {
+    font-size: 0.62rem;
+    padding: 3px 10px;
+    gap: 5px;
+  }
+
   .contact-badge-dot {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
+  }
+
+  .contact-desc {
+    font-size: 0.85rem;
+    margin-bottom: 24px;
   }
 
   .contact-btn {
-    padding: 12px 28px;
-    font-size: 0.85rem;
+    padding: 10px 24px;
+    font-size: 0.82rem;
   }
 
   .contact-response {
-    font-size: 0.68rem;
-    margin-top: 10px;
+    font-size: 0.65rem;
+    margin-top: 8px;
   }
 
   .contact-social {
-    gap: 12px;
-    margin-top: 28px;
+    gap: 10px;
+    margin-top: 24px;
   }
 
   .social-link {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
+    font-size: 0.85rem;
+  }
+
+  .project-body {
+    padding: 14px;
+  }
+
+  .project-body h3 {
     font-size: 1rem;
+  }
+
+  .project-body p {
+    font-size: 0.8rem;
+  }
+
+  .project-tech span {
+    font-size: 0.65rem;
+    padding: 3px 8px;
   }
 }
 
