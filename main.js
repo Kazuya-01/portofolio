@@ -107,6 +107,7 @@ const hamburgerIcon = hamburger?.querySelector('i');
 function closeNav() {
   navLinks?.classList.remove('active');
   navOverlay?.classList.remove('active');
+  hamburger?.classList.remove('spin');
   if (hamburgerIcon) {
     hamburgerIcon.classList.add('fa-bars');
     hamburgerIcon.classList.remove('fa-times');
@@ -116,6 +117,7 @@ function closeNav() {
 function toggleNav() {
   navLinks?.classList.toggle('active');
   navOverlay?.classList.toggle('active');
+  hamburger?.classList.toggle('spin');
   if (hamburgerIcon) {
     hamburgerIcon.classList.toggle('fa-bars');
     hamburgerIcon.classList.toggle('fa-times');
