@@ -1680,14 +1680,15 @@ footer {
   .nav-links {
     position: absolute;
     top: 70px;
-    left: 0;
-    width: 100%;
+    left: 12px;
+    width: calc(100% - 24px);
     flex-direction: column;
     background: rgba(10, 14, 23, 0.97);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid rgba(var(--accent-rgb), 0.08);
-    padding: 20px 24px;
+    border: 1px solid rgba(var(--accent-rgb), 0.08);
+    border-radius: 16px;
+    padding: 16px;
     gap: 4px;
     transform: translateY(-16px);
     opacity: 0;
