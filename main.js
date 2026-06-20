@@ -127,6 +127,7 @@ function toggleNav() {
 if (hamburger && navLinks && hamburgerIcon) {
   hamburger.addEventListener('click', toggleNav);
   navOverlay?.addEventListener('click', closeNav);
+  navLinks.addEventListener('click', e => { if (e.target === navLinks) closeNav(); });
 
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', closeNav);
