@@ -1799,18 +1799,18 @@ footer {
 
   .about-image {
     width: 100%;
-    max-width: 260px;
+    max-width: 300px;
     height: auto;
     aspect-ratio: 280 / 320;
   }
 
   .about-image-border {
     width: 100%;
-    max-width: 260px;
+    max-width: 300px;
     height: auto;
     aspect-ratio: 280 / 320;
-    top: 12px;
-    left: 12px;
+    top: 14px;
+    left: 14px;
   }
 
   .contact-wrapper {
@@ -2110,18 +2110,18 @@ footer {
 
   .about-image {
     width: 100%;
-    max-width: 200px;
+    max-width: 260px;
     height: auto;
     aspect-ratio: 280 / 320;
   }
 
   .about-image-border {
     width: 100%;
-    max-width: 200px;
+    max-width: 260px;
     height: auto;
     aspect-ratio: 280 / 320;
-    top: 10px;
-    left: 10px;
+    top: 12px;
+    left: 12px;
   }
 
   .about-card {
