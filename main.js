@@ -421,4 +421,104 @@ chatInput?.addEventListener('keydown', e => {
 
 restoreChat();
 
+// === Visitor Counter ===
+(function() {
+  const el = document.getElementById('visitorCount');
+  if (!el) return;
+  fetch('https://api.countapi.xyz/hit/portofolio-syarif/visits')
+    .then(r => r.json())
+    .then(d => { el.textContent = d.value; })
+    .catch(() => { el.textContent = '—'; });
+})();
+
+// === Easter Egg ===
+(function() {
+  const SECRET = 'kuro';
+  let buf = '';
+  document.addEventListener('keydown', e => {
+    buf = (buf + e.key).toLowerCase().slice(-SECRET.length);
+    if (buf !== SECRET) return;
+    for (let i = 0; i < 40; i++) {
+      const dot = document.createElement('div');
+      dot.style.cssText = `
+        position:fixed; pointer-events:none; z-index:99999;
+        width:${4 + Math.random() * 8}px; height:${4 + Math.random() * 8}px;
+        background:hsl(${Math.random() * 360},80%,60%);
+        border-radius:50%;
+        left:${window.innerWidth * 0.2 + Math.random() * window.innerWidth * 0.6}px;
+        top:${window.innerHeight * 0.2 + Math.random() * window.innerHeight * 0.6}px;
+        animation:easterFade 1.2s ease-out forwards;
+      `;
+      dot.style.setProperty('--dx', (Math.random() - 0.5) * 300 + 'px');
+      dot.style.setProperty('--dy', (Math.random() - 0.5) * 300 + 'px');
+      document.body.appendChild(dot);
+      setTimeout(() => dot.remove(), 1300);
+    }
+  });
+})();
+
+// === Easter Egg keyframes (injected once) ===
+(function() {
+  if (document.getElementById('easterStyle')) return;
+  const s = document.createElement('style');
+  s.id = 'easterStyle';
+  s.textContent = `@keyframes easterFade {
+    0%{ opacity:1; transform:translate(0,0) scale(1) }
+    100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(0.3) }
+  }`;
+  document.head.appendChild(s);
+})();
+
+// === Cursor Particles ===
+(function() {
+  if (window.innerWidth <= 768) return;
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9998';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  let w, h;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const particles = [];
+  for (let i = 0; i < 25; i++) {
+    particles.push({
+      x: Math.random() * w, y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
+      size: 1.5 + Math.random() * 2, alpha: 0.15 + Math.random() * 0.2,
+    });
+  }
+
+  let mx = -9999, my = -9999;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    for (const p of particles) {
+      const dx = mx - p.x, dy = my - p.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 200) {
+        const force = (200 - dist) / 200 * 0.02;
+        p.vx += dx * force;
+        p.vy += dy * force;
+      }
+      p.vx *= 0.98; p.vy *= 0.98;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,71,87,${p.alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
 
