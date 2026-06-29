@@ -1,40 +1,7 @@
-export async function onRequest(context) {
-  const { request, env } = context;
+const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const MODEL = 'llama-3.1-8b-instant';
 
-  if (request.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
-  }
-
-  if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const { message, history } = await request.json();
-  if (!message) {
-    return new Response(JSON.stringify({ error: 'Pesan tidak boleh kosong' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-
-  const apiKeys = [env.GEMINI_API_KEY, env.GEMINI_API_KEY_2, env.GEMINI_API_KEY_3, env.GEMINI_API_KEY_4, env.GEMINI_API_KEY_5, env.GEMINI_API_KEY_6].filter(Boolean);
-  if (apiKeys.length === 0) {
-    return new Response(
-      JSON.stringify({ error: 'API key belum dikonfigurasi.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
-  }
-
-  const systemPrompt = `Kamu Kuro, asisten virtual portfolio M. Syarifudin S.Kom (Syarif). Santai, cair, pake bahasa Indonesia gaul.
+const systemPrompt = `Kamu Kuro, asisten virtual portfolio M. Syarifudin S.Kom (Syarif). Santai, cair, pake bahasa Indonesia gaul.
 
 DATA SYARIF:
 - 24 th, lahir 28 Sep 2001, Sukabumi. S1 Sistem Informasi USI, IPK 3.41.
@@ -67,70 +34,89 @@ ATURAN NGOBROL & HUMOR:
 - Langsung jawab, jangan suruh tanya tentang portfolio.
 - RESPON BERFARIASI: jangan jawab dengan pola yang itu-itu aja. Kreatif, beda-beda tiap pertanyaan.`;
 
-  const contents = [];
-  if (history && Array.isArray(history)) {
-    for (const msg of history.slice(-5)) {
-      contents.push({ role: msg.role, parts: [{ text: msg.text }] });
-    }
+export async function onRequest(context) {
+  const { request, env } = context;
+
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
   }
-  contents.push({ role: 'user', parts: [{ text: message }] });
 
-  const body = JSON.stringify({
-    system_instruction: { parts: [{ text: systemPrompt }] },
-    contents,
-    generationConfig: { temperature: 0.9, maxOutputTokens: 400, topP: 0.95 },
-  });
+  if (request.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
-  let lastError = 'Gagal mendapatkan respons dari AI.';
+  const { message, history } = await request.json();
+  if (!message) {
+    return new Response(JSON.stringify({ error: 'Pesan tidak boleh kosong' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
-  for (const key of apiKeys) {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body,
-        }
-      );
+  const apiKey = env.GROQ_API_KEY;
+  if (!apiKey) {
+    return new Response(
+      JSON.stringify({ error: 'GROQ_API_KEY belum dikonfigurasi.' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 
-      if (response.ok) {
-        const data = await response.json();
-        const reply =
-          data.candidates?.[0]?.content?.parts?.[0]?.text ||
-          'Maaf, aku tidak bisa merespons sekarang. Coba lagi ya!';
-        return new Response(JSON.stringify({ reply }), {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
+  try {
+    const messages = [{ role: 'system', content: systemPrompt }];
+    if (history && Array.isArray(history)) {
+      for (const msg of history.slice(-5)) {
+        messages.push({
+          role: msg.role === 'model' ? 'assistant' : 'user',
+          content: msg.text,
         });
       }
-
-      const data = await response.json();
-
-      if (response.status === 400) {
-        console.error('Gemini bad request:', data);
-        return new Response(
-          JSON.stringify({ error: 'Request tidak valid.' }),
-          { status: 500, headers: { 'Content-Type': 'application/json' } }
-        );
-      }
-
-      if (response.status === 429 || response.status === 403) {
-        console.warn(`Key ${key.slice(0, 8)}... quota habis, coba key berikutnya`);
-        lastError = 'Semua API key sedang habis. Coba lagi nanti.';
-        continue;
-      }
-
-      console.error(`Gemini error (${response.status}):`, data);
-      lastError = 'Gagal mendapatkan respons dari AI.';
-    } catch (err) {
-      console.error(`Network error on key ${key.slice(0, 8)}:`, err);
-      lastError = 'Terjadi kesalahan koneksi.';
     }
-  }
+    messages.push({ role: 'user', content: message });
 
-  return new Response(
-    JSON.stringify({ error: lastError }),
-    { status: 429, headers: { 'Content-Type': 'application/json' } }
-  );
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        max_tokens: 500,
+        temperature: 0.7,
+        top_p: 0.9,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Groq error:', data);
+      return new Response(
+        JSON.stringify({ error: 'Gagal mendapatkan respons dari AI.' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const reply = data.choices?.[0]?.message?.content || 'Maaf, aku tidak bisa merespons sekarang. Coba lagi ya!';
+    return new Response(JSON.stringify({ reply }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (err) {
+    console.error('Chat error:', err);
+    return new Response(
+      JSON.stringify({ error: 'Terjadi kesalahan koneksi.' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
+  }
 }
