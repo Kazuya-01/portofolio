@@ -249,8 +249,60 @@ const chatMessages = document.getElementById('chatMessages');
 const chatInput = document.getElementById('chatInput');
 const chatSend = document.getElementById('chatSend');
 const chatLimit = document.getElementById('chatLimit');
-let chatCount = 0;
-let chatHistory = [];
+const STORAGE_KEY = 'kuro_chat';
+const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+let saved, chatCount, chatHistory, cooldownUntil;
+try {
+  saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+} catch {}
+saved = saved || {};
+chatCount = saved.count || 0;
+chatHistory = saved.history || [];
+cooldownUntil = saved.cooldown || 0;
+
+function saveChat() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    count: chatCount,
+    history: chatHistory,
+    cooldown: cooldownUntil
+  }));
+}
+
+function restoreChat() {
+  const now = Date.now();
+  if (cooldownUntil > now) {
+    chatCount = MAX_CHAT;
+    chatHistory.forEach(msg => addMsg(msg.text, msg.role === 'user' ? 'user' : 'bot'));
+    lockChat();
+    updateChatLimit();
+    startCooldownTimer();
+    return;
+  }
+  if (cooldownUntil > 0 && cooldownUntil <= now) {
+    chatCount = 0;
+    chatHistory = [];
+    cooldownUntil = 0;
+    saveChat();
+  }
+  chatHistory.forEach(msg => addMsg(msg.text, msg.role === 'user' ? 'user' : 'bot'));
+  if (chatCount >= MAX_CHAT) lockChat();
+  updateChatLimit();
+}
+
+function startCooldownTimer() {
+  chatLimit.textContent = 'Tunggu 24 jam untuk chat lagi';
+  const interval = setInterval(() => {
+    const remaining = cooldownUntil - Date.now();
+    if (remaining <= 0) {
+      clearInterval(interval);
+      location.reload();
+      return;
+    }
+    const h = Math.floor(remaining / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    chatLimit.textContent = 'Bisa chat lagi dalam ' + h + 'j ' + m + 'm';
+  }, 60000);
+}
 
 function updateChatLimit() {
   const remaining = MAX_CHAT - chatCount;
@@ -300,9 +352,13 @@ function removeTyping() {
 function lockChat() {
   chatInput.disabled = true;
   chatSend.disabled = true;
+  if (!cooldownUntil) {
+    cooldownUntil = Date.now() + COOLDOWN_MS;
+    saveChat();
+  }
   const div = document.createElement('div');
   div.className = 'chat-limit-msg';
-  div.textContent = '✕ Batas 5 pertanyaan tercapai. Terima kasih!';
+  div.textContent = '✕ Batas 5 pertanyaan tercapai. Kembali lagi besok ya!';
   chatMessages.parentNode.insertBefore(div, chatMessages.nextSibling);
   chatToggle.classList.add('hidden');
 }
@@ -317,6 +373,7 @@ async function sendMessage() {
   chatCount++;
   updateChatLimit();
   chatHistory.push({ role: 'user', text });
+  saveChat();
 
   if (chatCount > MAX_CHAT) {
     lockChat();
@@ -333,8 +390,10 @@ async function sendMessage() {
     });
     const data = await res.json();
     removeTyping();
-    addMsg(data.reply || 'Maaf, terjadi kesalahan. Coba lagi ya!', 'bot');
-    chatHistory.push({ role: 'model', text: data.reply || '' });
+    const reply = data.reply || data.error || 'Maaf, terjadi kesalahan. Coba lagi ya!';
+    addMsg(reply, 'bot');
+    chatHistory.push({ role: 'model', text: reply });
+    saveChat();
   } catch {
     removeTyping();
     addMsg('Maaf, koneksi terputus. Coba lagi nanti!', 'bot');
@@ -359,5 +418,7 @@ chatSend?.addEventListener('click', sendMessage);
 chatInput?.addEventListener('keydown', e => {
   if (e.key === 'Enter') sendMessage();
 });
+
+restoreChat();
 
 
