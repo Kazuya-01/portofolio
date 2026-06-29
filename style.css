@@ -946,17 +946,23 @@ section {
 
 .skill-icon {
   font-size: 2.4rem;
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   transition: transform 0.4s ease, filter 0.4s ease;
-  filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.2));
 }
+
+[data-tech="php"] .skill-icon { color: #777BB4; filter: drop-shadow(0 0 6px rgba(119, 123, 180, 0.3)); }
+[data-tech="html"] .skill-icon { color: #E34F26; filter: drop-shadow(0 0 6px rgba(227, 79, 38, 0.3)); }
+[data-tech="js"] .skill-icon { color: #F7DF1E; filter: drop-shadow(0 0 6px rgba(247, 223, 30, 0.3)); }
+[data-tech="tailwind"] .skill-icon { color: #06B6D4; filter: drop-shadow(0 0 6px rgba(6, 182, 212, 0.3)); }
+[data-tech="alpine"] .skill-icon { color: #77C1D2; filter: drop-shadow(0 0 6px rgba(119, 193, 210, 0.3)); }
+[data-tech="react"] .skill-icon { color: #61DAFB; filter: drop-shadow(0 0 6px rgba(97, 218, 251, 0.3)); }
+[data-tech="mysql"] .skill-icon { color: #4479A1; filter: drop-shadow(0 0 6px rgba(68, 121, 161, 0.3)); }
+[data-tech="git"] .skill-icon { color: #F05032; filter: drop-shadow(0 0 6px rgba(240, 80, 50, 0.3)); }
+[data-tech="excel"] .skill-icon { color: #217346; filter: drop-shadow(0 0 6px rgba(33, 115, 70, 0.3)); }
+[data-tech="figma"] .skill-icon { color: #F24E1E; filter: drop-shadow(0 0 6px rgba(242, 78, 30, 0.3)); }
 
 .skill-card:hover .skill-icon {
   transform: scale(1.2);
-  filter: drop-shadow(0 0 12px rgba(var(--accent-rgb), 0.4));
+  filter: brightness(1.2) drop-shadow(0 0 14px currentColor);
 }
 
 .skill-name {
