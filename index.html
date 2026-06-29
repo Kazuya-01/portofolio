@@ -481,6 +481,37 @@
     <p class="footer-small">&copy; 2026 All rights reserved</p>
   </footer>
 
+  <!-- Chat Widget -->
+  <div class="chat-widget" id="chatWidget">
+    <button class="chat-toggle" id="chatToggle" aria-label="Chat dengan Kuro">
+      <span class="chat-toggle-icon">黒</span>
+    </button>
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="chat-avatar">黒</div>
+          <div>
+            <div class="chat-name">Kuro</div>
+            <div class="chat-status"><span class="chat-status-dot"></span> Online</div>
+          </div>
+        </div>
+        <button class="chat-close" id="chatClose"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-message bot">
+          <div class="chat-bubble">Hai! 👋 Aku Kuro, asisten virtual M. Syarifudin. Tanya apa saja tentang portfolio, proyek, atau pengalamannya! Kamu punya <strong>5 pertanyaan</strong> — gunakan dengan bijak!</div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Tanya sesuatu..." maxlength="200">
+        <button class="chat-send" id="chatSend"><i class="fas fa-paper-plane"></i></button>
+      </div>
+      <div class="chat-footer">
+        <span class="chat-limit" id="chatLimit">Sisa 5 dari 5 pertanyaan</span>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
   <script src="main.js"></script>
 </body>

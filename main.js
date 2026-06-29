@@ -240,4 +240,124 @@ if (navProgress) {
   });
 }
 
+// === Chat Widget ===
+const MAX_CHAT = 5;
+const chatToggle = document.getElementById('chatToggle');
+const chatPanel = document.getElementById('chatPanel');
+const chatClose = document.getElementById('chatClose');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
+const chatLimit = document.getElementById('chatLimit');
+let chatCount = 0;
+let chatHistory = [];
+
+function updateChatLimit() {
+  const remaining = MAX_CHAT - chatCount;
+  chatLimit.textContent = 'Sisa ' + remaining + ' dari ' + MAX_CHAT + ' pertanyaan';
+  chatLimit.className = 'chat-limit';
+  if (remaining === 0) chatLimit.classList.add('exhausted');
+  else if (remaining <= 2) chatLimit.classList.add('warning');
+}
+
+function toggleChat() {
+  chatPanel.classList.toggle('active');
+  if (chatPanel.classList.contains('active')) chatInput.focus();
+}
+
+function closeChat() {
+  chatPanel.classList.remove('active');
+}
+
+chatToggle?.addEventListener('click', toggleChat);
+chatClose?.addEventListener('click', closeChat);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && chatPanel?.classList.contains('active')) closeChat();
+});
+
+function addMsg(text, role) {
+  const div = document.createElement('div');
+  div.className = 'chat-message ' + role;
+  div.innerHTML = '<div class="chat-bubble">' + text + '</div>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'chat-message bot chat-typing';
+  div.id = 'chatTyping';
+  div.innerHTML = '<div class="chat-bubble"><span></span><span></span><span></span></div>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('chatTyping');
+  if (el) el.remove();
+}
+
+function lockChat() {
+  chatInput.disabled = true;
+  chatSend.disabled = true;
+  const div = document.createElement('div');
+  div.className = 'chat-limit-msg';
+  div.textContent = '✕ Batas 5 pertanyaan tercapai. Terima kasih!';
+  chatMessages.parentNode.insertBefore(div, chatMessages.nextSibling);
+  chatToggle.classList.add('hidden');
+}
+
+async function sendMessage() {
+  const text = chatInput.value.trim();
+  if (!text || chatSend.disabled) return;
+
+  chatInput.value = '';
+  addMsg(escapeHtml(text), 'user');
+  chatSend.disabled = true;
+  chatCount++;
+  updateChatLimit();
+  chatHistory.push({ role: 'user', text });
+
+  if (chatCount > MAX_CHAT) {
+    lockChat();
+    return;
+  }
+
+  showTyping();
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, history: chatHistory.slice(-20) })
+    });
+    const data = await res.json();
+    removeTyping();
+    addMsg(data.reply || 'Maaf, terjadi kesalahan. Coba lagi ya!', 'bot');
+    chatHistory.push({ role: 'model', text: data.reply || '' });
+  } catch {
+    removeTyping();
+    addMsg('Maaf, koneksi terputus. Coba lagi nanti!', 'bot');
+  }
+
+  if (chatCount >= MAX_CHAT) {
+    lockChat();
+    return;
+  }
+
+  chatSend.disabled = false;
+  chatInput.focus();
+}
+
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+chatSend?.addEventListener('click', sendMessage);
+chatInput?.addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+
 
