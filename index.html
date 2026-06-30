@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>M. Syarifudin, S.Kom. | Portfolio</title>
-  <meta name="description" content="Portfolio pribadi M. Syarifudin S.Kom — Fullstack Developer dari Sukabumi.">
-  <meta name="robots" content="noindex, nofollow">
-  <meta property="og:title" content="M. Syarifudin S.Kom | Portfolio">
-  <meta property="og:description" content="Fullstack Developer — Laravel, React Native, JavaScript. Portfolio pribadi M. Syarifudin.">
-  <meta property="og:image" content="https://portofolio-syarif.pages.dev/img/og-banner.svg">
-  <meta property="og:url" content="https://portofolio-syarif.pages.dev">
+  <meta name="description" content="Portfolio M. Syarifudin, S.Kom. — Information Systems graduate, Laravel & React Native developer. Lihat proyek, skill, dan pengalaman.">
+  <meta property="og:title" content="M. Syarifudin, S.Kom. | Portfolio">
+  <meta property="og:description" content="Information Systems graduate & web craftsman. Laravel, React Native, database, dan API development.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://portofolio-syarif.pages.dev">
+  <meta property="og:image" content="https://portofolio-syarif.pages.dev/img/Avatar.jpeg">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -273,6 +272,7 @@
         <h2 class="section-title">Featured Projects</h2>
         <div class="section-line"></div>
       </div>
+      <div class="project-filters" id="projectFilters"></div>
       <div class="projects-grid">
         <div class="project-card fade-in">
           <div class="project-img" style="background: linear-gradient(135deg, rgba(102,126,234,0.85) 0%, rgba(118,75,162,0.85) 100%), url('https://socialify.git.ci/Kazuya-01/campuslms/image?description=1&font=Inter&forks=1&issues=1&language=1&name=0&owner=1&pattern=Circuit%20Board&stargazers=1&theme=Dark') center/cover no-repeat;">
@@ -288,6 +288,11 @@
             <div class="project-tech">
               <span>Laravel 13</span><span>PHP</span><span>Tailwind</span><span>Alpine.js</span>
             </div>
+            <ul class="project-features" hidden>
+              <li>Kelas virtual &amp; tugas interaktif</li>
+              <li>Quiz anti-cheat &amp; forum diskusi</li>
+              <li>Absensi QR Code &amp; sertifikat PDF</li>
+            </ul>
           </div>
         </div>
         <div class="project-card fade-in">
@@ -304,6 +309,11 @@
             <div class="project-tech">
               <span>Laravel</span><span>PHP</span><span>MySQL</span><span>Bootstrap</span>
             </div>
+            <ul class="project-features" hidden>
+              <li>Multi-role admin &amp; pengajar</li>
+              <li>Rekap kehadiran otomatis</li>
+              <li>Laporan real-time &amp; dashboard</li>
+            </ul>
           </div>
         </div>
         <div class="project-card fade-in">
@@ -320,6 +330,11 @@
             <div class="project-tech">
               <span>Laravel</span><span>PHP</span><span>MySQL</span><span>JavaScript</span>
             </div>
+            <ul class="project-features" hidden>
+              <li>Database Pokemon lengkap</li>
+              <li>Pencarian real-time &amp; filter tipe</li>
+              <li>Statistik detail &amp; responsif</li>
+            </ul>
           </div>
         </div>
         <div class="project-card fade-in">
@@ -336,6 +351,11 @@
             <div class="project-tech">
               <span>Laravel</span><span>PHP</span><span>MySQL</span><span>Chart.js</span>
             </div>
+            <ul class="project-features" hidden>
+              <li>Lacak pemasukan &amp; pengeluaran</li>
+              <li>Anggaran bulanan otomatis</li>
+              <li>Visualisasi laporan interaktif</li>
+            </ul>
           </div>
         </div>
         <div class="project-card fade-in">
@@ -352,6 +372,11 @@
             <div class="project-tech">
               <span>Laravel</span><span>PHP</span><span>MySQL</span><span>Midtrans</span>
             </div>
+            <ul class="project-features" hidden>
+              <li>Booking lapangan real-time</li>
+              <li>Jadwal &amp; manajemen tim</li>
+              <li>Pembayaran Midtrans terintegrasi</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -487,7 +512,6 @@
     </div>
     <p>M. Syarifudin, S.Kom. &mdash; 限界を超えろ</p>
     <p class="footer-small">&copy; 2026 All rights reserved</p>
-    <p class="footer-small" style="margin-top:8px">Visitors: <span id="visitorCount">0</span></p>
   </footer>
 
   <!-- Chat Widget -->
@@ -517,6 +541,34 @@
       </div>
       <div class="chat-footer">
         <span class="chat-limit" id="chatLimit">Sisa 5 dari 5 pertanyaan</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Modal -->
+  <div class="project-modal" id="projectModal">
+    <div class="modal-bg"></div>
+    <div class="modal-wrap">
+      <div class="modal-content">
+        <button class="modal-close" id="modalClose" aria-label="Tutup"><i class="fas fa-times"></i></button>
+        <div class="modal-img" id="modalImg"></div>
+        <div class="modal-body">
+          <div class="modal-meta">
+            <span class="modal-type" id="modalType"></span>
+            <h3 class="modal-title" id="modalTitle"></h3>
+          </div>
+          <p class="modal-desc" id="modalDesc"></p>
+          <div class="modal-features-wrap" id="modalFeatures" hidden>
+            <h4 class="modal-features-title"><i class="fas fa-star"></i> Fitur Unggulan</h4>
+            <ul id="modalFeaturesList"></ul>
+          </div>
+          <div class="modal-tech" id="modalTech"></div>
+        </div>
+        <div class="modal-footer">
+          <a class="btn btn-primary modal-github" id="modalGithub" target="_blank">
+            <i class="fab fa-github"></i> <span>Lihat di GitHub</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>

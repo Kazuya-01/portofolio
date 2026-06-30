@@ -228,6 +228,8 @@ window.addEventListener('load', () => {
       el.classList.add('visible');
     }
   });
+  const heroText = document.querySelector('.hero-text');
+  if (heroText) heroText.classList.add('staggered');
 });
 
 // === Scroll progress bar ===
@@ -239,6 +241,30 @@ if (navProgress) {
     navProgress.style.width = (scrollTop / docHeight) * 100 + '%';
   });
 }
+
+// === Section line reveal ===
+const lineObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+      lineObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.section-line').forEach(el => lineObserver.observe(el));
+
+// === Button ripple ===
+document.querySelectorAll('.btn').forEach(btn => {
+  btn.addEventListener('click', function (e) {
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.left = (e.clientX - rect.left) + 'px';
+    ripple.style.top = (e.clientY - rect.top) + 'px';
+    this.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  });
+});
 
 // === Chat Widget ===
 const MAX_CHAT = 5;
@@ -252,6 +278,13 @@ const chatLimit = document.getElementById('chatLimit');
 const STORAGE_KEY = 'kuro_chat';
 const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 let saved, chatCount, chatHistory, cooldownUntil;
+
+if (location.search.includes('reset-chat')) {
+  localStorage.removeItem(STORAGE_KEY);
+  history.replaceState(null, '', location.pathname);
+  location.reload();
+}
+
 try {
   saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
 } catch {}
@@ -390,13 +423,31 @@ async function sendMessage() {
     });
     const data = await res.json();
     removeTyping();
-    const reply = data.reply || data.error || 'Maaf, terjadi kesalahan. Coba lagi ya!';
-    addMsg(reply, 'bot');
-    chatHistory.push({ role: 'model', text: reply });
+
+    if (!data.reply) {
+      chatHistory.pop();
+      chatCount--;
+      saveChat();
+      updateChatLimit();
+      chatSend.disabled = false;
+      chatInput.focus();
+      addMsg(data.error || 'Maaf, terjadi kesalahan. Coba lagi ya!', 'bot');
+      return;
+    }
+
+    addMsg(data.reply, 'bot');
+    chatHistory.push({ role: 'model', text: data.reply });
     saveChat();
   } catch {
     removeTyping();
+    chatHistory.pop();
+    chatCount--;
+    saveChat();
+    updateChatLimit();
+    chatSend.disabled = false;
+    chatInput.focus();
     addMsg('Maaf, koneksi terputus. Coba lagi nanti!', 'bot');
+    return;
   }
 
   if (chatCount >= MAX_CHAT) {
@@ -421,104 +472,123 @@ chatInput?.addEventListener('keydown', e => {
 
 restoreChat();
 
-// === Visitor Counter ===
-(function() {
-  const el = document.getElementById('visitorCount');
-  if (!el) return;
-  fetch('https://api.countapi.xyz/hit/portofolio-syarif/visits')
-    .then(r => r.json())
-    .then(d => { el.textContent = d.value; })
-    .catch(() => { el.textContent = '—'; });
-})();
+// === Project Filter ===
+const projectFilters = document.getElementById('projectFilters');
+const allProjectCards = document.querySelectorAll('.project-card');
 
-// === Easter Egg ===
-(function() {
-  const SECRET = 'kuro';
-  let buf = '';
-  document.addEventListener('keydown', e => {
-    buf = (buf + e.key).toLowerCase().slice(-SECRET.length);
-    if (buf !== SECRET) return;
-    for (let i = 0; i < 40; i++) {
-      const dot = document.createElement('div');
-      dot.style.cssText = `
-        position:fixed; pointer-events:none; z-index:99999;
-        width:${4 + Math.random() * 8}px; height:${4 + Math.random() * 8}px;
-        background:hsl(${Math.random() * 360},80%,60%);
-        border-radius:50%;
-        left:${window.innerWidth * 0.2 + Math.random() * window.innerWidth * 0.6}px;
-        top:${window.innerHeight * 0.2 + Math.random() * window.innerHeight * 0.6}px;
-        animation:easterFade 1.2s ease-out forwards;
-      `;
-      dot.style.setProperty('--dx', (Math.random() - 0.5) * 300 + 'px');
-      dot.style.setProperty('--dy', (Math.random() - 0.5) * 300 + 'px');
-      document.body.appendChild(dot);
-      setTimeout(() => dot.remove(), 1300);
-    }
-  });
-})();
-
-// === Easter Egg keyframes (injected once) ===
-(function() {
-  if (document.getElementById('easterStyle')) return;
-  const s = document.createElement('style');
-  s.id = 'easterStyle';
-  s.textContent = `@keyframes easterFade {
-    0%{ opacity:1; transform:translate(0,0) scale(1) }
-    100%{ opacity:0; transform:translate(var(--dx),var(--dy)) scale(0.3) }
-  }`;
-  document.head.appendChild(s);
-})();
-
-// === Cursor Particles ===
-(function() {
-  if (window.innerWidth <= 768) return;
-  const canvas = document.createElement('canvas');
-  canvas.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:9998';
-  document.body.appendChild(canvas);
-  const ctx = canvas.getContext('2d');
-  let w, h;
-
-  function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const particles = [];
-  for (let i = 0; i < 25; i++) {
-    particles.push({
-      x: Math.random() * w, y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3,
-      size: 1.5 + Math.random() * 2, alpha: 0.15 + Math.random() * 0.2,
+if (projectFilters && allProjectCards.length) {
+  const techMap = new Map();
+  allProjectCards.forEach(card => {
+    card.querySelectorAll('.project-tech span').forEach(s => {
+      const key = s.textContent.trim().toLowerCase();
+      if (!techMap.has(key)) techMap.set(key, s.textContent.trim());
     });
-  }
+  });
 
-  let mx = -9999, my = -9999;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.dataset.filter = 'all';
+  allBtn.textContent = 'All';
+  projectFilters.appendChild(allBtn);
 
-  function animate() {
-    ctx.clearRect(0, 0, w, h);
-    for (const p of particles) {
-      const dx = mx - p.x, dy = my - p.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 200) {
-        const force = (200 - dist) / 200 * 0.02;
-        p.vx += dx * force;
-        p.vy += dy * force;
+  [...techMap.entries()].sort((a, b) => a[0].localeCompare(b[0])).forEach(([key, label]) => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.dataset.filter = key;
+    btn.textContent = label;
+    projectFilters.appendChild(btn);
+  });
+
+  projectFilters.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    projectFilters.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    allProjectCards.forEach(card => {
+      const techs = [...card.querySelectorAll('.project-tech span')].map(s => s.textContent.trim().toLowerCase());
+      if (filter === 'all' || techs.includes(filter)) {
+        card.style.display = '';
+        card.classList.add('visible');
+      } else {
+        card.style.display = 'none';
       }
-      p.vx *= 0.98; p.vy *= 0.98;
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-      if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(255,71,87,${p.alpha})`;
-      ctx.fill();
+    });
+  });
+}
+
+// === Project Modal ===
+const modal = document.getElementById('projectModal');
+if (modal) {
+  const modalBg = modal.querySelector('.modal-bg');
+  const modalClose = document.getElementById('modalClose');
+  const modalImg = document.getElementById('modalImg');
+  const modalType = document.getElementById('modalType');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalFeatures = document.getElementById('modalFeatures');
+  const modalFeaturesList = document.getElementById('modalFeaturesList');
+  const modalTech = document.getElementById('modalTech');
+  const modalGithub = document.getElementById('modalGithub');
+
+  function openModal(card) {
+    const img = card.querySelector('.project-img');
+    const type = card.querySelector('.project-type');
+    const title = card.querySelector('h3');
+    const desc = card.querySelector('.project-body > p');
+    const tech = card.querySelector('.project-tech');
+    const features = card.querySelector('.project-features');
+    const github = card.querySelector('.project-github');
+
+    if (img) modalImg.style.background = img.style.background;
+    if (type) modalType.textContent = type.textContent;
+    if (title) modalTitle.textContent = title.textContent;
+    if (desc) modalDesc.textContent = desc.textContent;
+
+    modalTech.innerHTML = '';
+    if (tech) {
+      tech.querySelectorAll('span').forEach(s => {
+        const tag = document.createElement('span');
+        tag.textContent = s.textContent;
+        modalTech.appendChild(tag);
+      });
     }
-    requestAnimationFrame(animate);
+
+    if (features) {
+      modalFeatures.hidden = false;
+      modalFeaturesList.innerHTML = '';
+      features.querySelectorAll('li').forEach(li => {
+        const item = document.createElement('li');
+        item.textContent = li.textContent;
+        modalFeaturesList.appendChild(item);
+      });
+    } else {
+      modalFeatures.hidden = true;
+    }
+
+    modalGithub.href = github ? github.href : '#';
+
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
-  animate();
-})();
+
+  function closeModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  allProjectCards.forEach(card => {
+    card.addEventListener('click', e => {
+      if (e.target.closest('.project-overlay a')) return;
+      openModal(card);
+    });
+  });
+
+  modalBg.addEventListener('click', closeModal);
+  modalClose.addEventListener('click', closeModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+}
 
 
