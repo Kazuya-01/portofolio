@@ -266,6 +266,30 @@ document.querySelectorAll('.btn').forEach(btn => {
   });
 });
 
+// === Theme Toggle ===
+(function () {
+  const toggle = document.getElementById('themeToggle');
+  const html = document.documentElement;
+  const key = 'kuro_theme';
+
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') html.setAttribute('data-theme', 'light');
+  else if (saved === 'dark') html.removeAttribute('data-theme');
+
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const isLight = html.getAttribute('data-theme') === 'light';
+      if (isLight) {
+        html.removeAttribute('data-theme');
+        localStorage.setItem(key, 'dark');
+      } else {
+        html.setAttribute('data-theme', 'light');
+        localStorage.setItem(key, 'light');
+      }
+    });
+  }
+})();
+
 // === Chat Widget ===
 const MAX_CHAT = 5;
 const chatToggle = document.getElementById('chatToggle');

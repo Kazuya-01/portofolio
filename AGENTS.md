@@ -14,6 +14,7 @@ Zero build step, zero package manager. Open `index.html` directly in browser; ch
 - **particles.js 2.0.0** — loaded at end of `<body>`; guarded by `typeof particlesJS !== 'undefined'` — silently skips if CDN fails
 
 ## JS behaviors (all in `main.js`)
+- **Theme toggle** — `.theme-toggle` in nav switches `data-theme` on `<html>`. Persists to `localStorage` key `kuro_theme`. Moon/sun icons rotate in `.theme-thumb`
 - **Particles** — `#particles-canvas`, fixed overlay at `z-index: 0`, only when CDN loaded
 - **Custom cursor** — `.cursor` + `.cursor-follower`; JS inits only when `innerWidth > 768`. CSS hides at 768px. `body` + all interactive elements use `cursor: none`
 - **Typing** — `.typing-text` cycles `['Laravel & PHP.', 'React Native.', 'Anime & Code.', 'Database & API.']`
@@ -50,6 +51,7 @@ Or connect Git repo on [Cloudflare Dashboard](https://dash.cloudflare.com/).
 
 ## Style conventions
 - CSS vars: `--bg: #0a0e17`, `--accent: #ff4757`, `--accent-secondary: #ffc048`, `--accent-tertiary: #536dfe`, `--text: #e2e8f0`
+- Light theme via `[data-theme="light"]` overrides all vars. `--white`/`--black` swap between themes
 - Headings: `'M PLUS Rounded 1c', sans-serif`; monospace: `'SF Mono', 'Fira Code', monospace`
 - Hero name gradient via `background-clip: text`
 - Glassmorphism: `background: rgba(...)` + `backdrop-filter: blur(...)`
