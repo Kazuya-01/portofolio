@@ -636,12 +636,18 @@ if (modal) {
   // minimum 1.5s display
   let minOk = false;
   setTimeout(() => { minOk = true; }, 1500);
-  // check readiness every 200ms after DOM is ready
-  document.addEventListener('DOMContentLoaded', () => {
+  // poll every 100ms once DOM is ready
+  function startPoll() {
     const iv = setInterval(() => {
       if (minOk) { clearInterval(iv); hideLoader(); }
-    }, 200);
-  });
+    }, 100);
+  }
+  // DOMContentLoaded might have already fired (script at end of body)
+  if (document.readyState !== 'loading') {
+    startPoll();
+  } else {
+    document.addEventListener('DOMContentLoaded', startPoll);
+  }
   // hide immediately on window.load
   window.addEventListener('load', hideLoader);
   // max 3s fallback
