@@ -621,20 +621,24 @@ if (modal) {
 }
 
 // === Back to Top ===
-const backToTop = document.getElementById('backToTop');
-if (backToTop) {
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
-    }
-  });
-
-  backToTop.addEventListener('click', () => {
+(function() {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+  function toggle() {
+    var s = window.pageYOffset || document.documentElement.scrollTop;
+    if (s > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  }
+  toggle();
+  window.addEventListener('scroll', toggle, { passive: true });
+  btn.addEventListener('click', function() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-}
+  btn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
 
 // === Nav Active Link ===
 const navLinkEls = document.querySelectorAll('.nav-links a');
