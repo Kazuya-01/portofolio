@@ -1,5 +1,8 @@
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const MAX_MSG_LENGTH = 500;
+const RATE_LIMIT = 20;
+const RATE_WINDOW = 60000;
 
 const systemPrompt = `Kamu Kuro, asisten virtual portfolio M. Syarifudin S.Kom (Syarif). Kamu adalah AI yang ceria, ramah, dan humoris—bedakan dirimu dengan Syarif.
 
@@ -42,6 +45,26 @@ ATURAN:
 - Langsung jawab, jangan suruh tanya lebih lanjut.
 - Kalo ditanya di luar data: "Wah, yang ini nih bikin Kuro garuk-garuk kepala~" tapi tetap bantu.
 - Beda-bedain respons, jangan pola yang itu-itu aja.`;
+
+const rateMap = new Map();
+
+function securityHeaders() {
+  return {
+    'Content-Type': 'application/json',
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'X-XSS-Protection': '1; mode=block',
+    'Referrer-Policy': 'no-referrer',
+  };
+}
+
+function corsOrigin(request) {
+  const origin = request.headers.get('Origin') || '';
+  if (origin === 'https://portofolio-syarif.pages.dev' || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    return origin;
+  }
+  return 'https://portofolio-syarif.pages.dev';
+}
 
 function buildMessages(history, message) {
   const messages = [{ role: 'system', content: systemPrompt }];
@@ -101,55 +124,78 @@ async function callGemini(env, history, message) {
   return null;
 }
 
+function sanitize(str) {
+  return String(str).replace(/[&<>"']/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    if (m === '"') return '&quot;';
+    return '&#39;';
+  });
+}
+
+function json(data, status, extraHeaders) {
+  return new Response(JSON.stringify(data), {
+    status: status || 200,
+    headers: { ...securityHeaders(), ...extraHeaders },
+  });
+}
+
 export async function onRequest(context) {
   const { request, env } = context;
+  const origin = corsOrigin(request);
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
 
   if (request.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
+    return new Response(null, { headers: corsHeaders });
   }
 
   if (request.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return json({ error: 'Method not allowed' }, 405, corsHeaders);
   }
 
-  const { message, history } = await request.json();
-  if (!message) {
-    return new Response(JSON.stringify({ error: 'Pesan tidak boleh kosong' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
+  const ip = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
+  const now = Date.now();
+  const entry = rateMap.get(ip);
+  if (entry) {
+    if (now - entry.start > RATE_WINDOW) {
+      rateMap.set(ip, { start: now, count: 1 });
+    } else if (entry.count >= RATE_LIMIT) {
+      return json({ error: 'Terlalu banyak permintaan. Tunggu beberapa saat.' }, 429, corsHeaders);
+    } else {
+      entry.count++;
+    }
+  } else {
+    rateMap.set(ip, { start: now, count: 1 });
   }
 
   try {
-    const messages = buildMessages(history, message);
-    let reply = await callGemini(env, history, message);
-    if (!reply) reply = await callGroq(env, messages);
+    const raw = await request.json();
+    const message = typeof raw.message === 'string' ? raw.message.trim() : '';
+    const history = Array.isArray(raw.history) ? raw.history : [];
 
-    if (!reply) {
-      return new Response(
-        JSON.stringify({ error: 'Gagal mendapatkan respons dari AI. Coba lagi nanti.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
+    if (!message) {
+      return json({ error: 'Pesan tidak boleh kosong' }, 400, corsHeaders);
+    }
+    if (message.length > MAX_MSG_LENGTH) {
+      return json({ error: 'Pesan terlalu panjang. Maksimal ' + MAX_MSG_LENGTH + ' karakter.' }, 400, corsHeaders);
     }
 
-    return new Response(JSON.stringify({ reply }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const safeMsg = sanitize(message);
+    let reply = await callGemini(env, history, safeMsg);
+    if (!reply) reply = await callGroq(env, buildMessages(history, safeMsg));
+
+    if (!reply) {
+      return json({ error: 'Gagal mendapatkan respons dari AI. Coba lagi nanti.' }, 500, corsHeaders);
+    }
+
+    return json({ reply }, 200, corsHeaders);
   } catch (err) {
     console.error('Chat error:', err);
-    return new Response(
-      JSON.stringify({ error: 'Terjadi kesalahan koneksi.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    return json({ error: 'Terjadi kesalahan koneksi.' }, 500, corsHeaders);
   }
 }
