@@ -1,5 +1,9 @@
 // === Loader ===
-setTimeout(function(){var l=document.getElementById('loader');if(l)l.style.display='none'},900);
+setTimeout(function(){
+  var l=document.getElementById('loader');
+  if(l)l.style.display='none';
+  window.scrollTo(0,0);
+},900);
 
 // === Particles ===
 if (typeof particlesJS !== 'undefined') {
