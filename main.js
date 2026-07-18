@@ -620,11 +620,6 @@ if (modal) {
   });
 }
 
-// === Back to Top ===
-document.getElementById('backToTop')?.addEventListener('click', function() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
 // === Nav Active Link ===
 const navLinkEls = document.querySelectorAll('.nav-links a');
 const sectionEls = document.querySelectorAll('section[id]');
