@@ -1,3 +1,6 @@
+// === Loader ===
+setTimeout(function(){var l=document.getElementById('loader');if(l)l.style.display='none'},900);
+
 // === Particles ===
 if (typeof particlesJS !== 'undefined') {
   particlesJS('particles-canvas', {
@@ -648,6 +651,17 @@ if (navLinkEls.length && sectionEls.length) {
   }, { passive: true });
   window.addEventListener('load', updateActiveNav);
 }
+
+// === Back to Top ===
+(function(){
+  var b=document.getElementById('backToTop');
+  if(!b)return;
+  function t(){var s=window.pageYOffset||document.documentElement.scrollTop;if(s>window.innerHeight*0.6)b.classList.add('visible');else b.classList.remove('visible')}
+  t();
+  var r=null;
+  window.addEventListener('scroll',function(){if(r)cancelAnimationFrame(r);r=requestAnimationFrame(t)},{passive:true});
+  b.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
+})();
 
 // === Cert image loaded handler ===
 document.querySelectorAll('.cert-img').forEach(img => {
