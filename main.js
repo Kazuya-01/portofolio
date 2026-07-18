@@ -617,9 +617,74 @@ if (modal) {
         const tag = document.createElement('span');
         tag.textContent = s.textContent;
         modalTech.appendChild(tag);
-      });
-    }
+  });
+}
 
+// === Loader ===
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.addEventListener('transitionend', () => {
+      loader.style.display = 'none';
+    }, { once: true });
+    loader.classList.add('loaded');
+  }
+});
+
+// === Back to Top ===
+const backToTop = document.getElementById('backToTop');
+if (backToTop) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 500) {
+      backToTop.classList.add('visible');
+    } else {
+      backToTop.classList.remove('visible');
+    }
+  });
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+// === Nav Active Link ===
+const navLinkEls = document.querySelectorAll('.nav-links a');
+const sectionEls = document.querySelectorAll('section[id]');
+let navThrottle = null;
+
+function updateActiveNav() {
+  let current = '';
+  sectionEls.forEach(section => {
+    const top = section.offsetTop - 150;
+    if (window.scrollY >= top) {
+      current = section.getAttribute('id');
+    }
+  });
+  navLinkEls.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+}
+
+if (navLinkEls.length && sectionEls.length) {
+  window.addEventListener('scroll', () => {
+    if (navThrottle) cancelAnimationFrame(navThrottle);
+    navThrottle = requestAnimationFrame(updateActiveNav);
+  }, { passive: true });
+  window.addEventListener('load', updateActiveNav);
+}
+
+// === Cert image loaded handler ===
+document.querySelectorAll('.cert-img').forEach(img => {
+  img.addEventListener('load', () => {
+    img.setAttribute('data-loaded', 'true');
+  });
+  if (img.complete) {
+    img.setAttribute('data-loaded', 'true');
+  }
+});
     if (features) {
       modalFeatures.hidden = false;
       modalFeaturesList.innerHTML = '';
