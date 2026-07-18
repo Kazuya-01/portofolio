@@ -1,9 +1,9 @@
 // === Loader ===
+if('scrollRestoration'in history)history.scrollRestoration='manual';
+window.scrollTo(0,0);
 setTimeout(function(){
   var l=document.getElementById('loader');
   if(l)l.style.display='none';
-  if('scrollRestoration' in history) history.scrollRestoration='manual';
-  window.scrollTo(0,0);
 },900);
 
 // === Particles ===
@@ -676,6 +676,7 @@ if (navLinkEls.length && sectionEls.length) {
   window.addEventListener('scroll',s,{passive:true});
   window.addEventListener('resize',s,{passive:true});
   b.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
+  setTimeout(function(){b.classList.add('visible')},5000);
 })();
 
 // === Cert image loaded handler ===
