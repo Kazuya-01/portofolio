@@ -3895,36 +3895,41 @@ footer {
 /* === Back to Top === */
 .back-to-top {
   position: fixed;
-  bottom: 80px;
-  left: 24px;
+  bottom: 100px;
+  right: 24px;
   z-index: 900;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--black);
-  border: none;
-  font-size: 1rem;
+  background: var(--card-bg);
+  color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+  font-size: 1.05rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(16px);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.3);
+  transform: translateY(20px) scale(0.9);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .back-to-top.visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .back-to-top:hover {
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+  color: var(--black);
+  border-color: transparent;
   transform: translateY(-4px) scale(1.1);
-  box-shadow: 0 8px 30px rgba(var(--accent-rgb), 0.4);
+  box-shadow: 0 8px 30px rgba(var(--accent-rgb), 0.35);
 }
 
 /* === Nav Active Link === */
@@ -3938,24 +3943,22 @@ footer {
 
 @media (max-width: 768px) {
   .back-to-top {
-    bottom: 80px;
-    left: 16px;
-    right: auto;
-    width: 40px;
-    height: 40px;
-    font-size: 0.9rem;
+    bottom: 90px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    font-size: 0.95rem;
     cursor: pointer;
   }
 }
 
 @media (max-width: 480px) {
   .back-to-top {
-    bottom: 70px;
-    left: 12px;
-    right: auto;
-    width: 36px;
-    height: 36px;
-    font-size: 0.8rem;
+    bottom: 80px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    font-size: 0.85rem;
   }
 
   .loader-kanji {
