@@ -300,8 +300,21 @@ const chatInput = document.getElementById('chatInput');
 const chatSend = document.getElementById('chatSend');
 const chatLimit = document.getElementById('chatLimit');
 const STORAGE_KEY = 'kuro_chat';
-const COOLDOWN_MS = 24 * 60 * 60 * 1000;
-let saved, chatCount, chatHistory, cooldownUntil;
+
+function getNext7AM() {
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(7, 0, 0, 0);
+  if (now >= next) next.setDate(next.getDate() + 1);
+  return next.getTime();
+}
+
+function getCooldownRemaining() {
+  return getNext7AM() - Date.now();
+}
+
+let saved, chatCount, chatHistory, inCooldown;
+let cooldownTimerInterval = null;
 
 if (location.search.includes('reset-chat')) {
   localStorage.removeItem(STORAGE_KEY);
@@ -315,31 +328,36 @@ try {
 saved = saved || {};
 chatCount = saved.count || 0;
 chatHistory = saved.history || [];
-cooldownUntil = saved.cooldown || 0;
+inCooldown = saved.inCooldown || false;
+
+// Backward compat: migrate old cooldown timestamp format
+if (!inCooldown && saved.cooldown > Date.now()) {
+  inCooldown = true;
+}
+
+// Auto-clear if past 7 AM
+if (inCooldown && getCooldownRemaining() <= 0) {
+  inCooldown = false;
+  chatCount = 0;
+  chatHistory = [];
+  saveChat();
+}
 
 function saveChat() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     count: chatCount,
     history: chatHistory,
-    cooldown: cooldownUntil
+    inCooldown: inCooldown
   }));
 }
 
 function restoreChat() {
-  const now = Date.now();
-  if (cooldownUntil > now) {
+  if (inCooldown) {
     chatCount = MAX_CHAT;
     chatHistory.forEach(msg => addMsg(msg.text, msg.role === 'user' ? 'user' : 'bot'));
     lockChat();
     updateChatLimit();
-    startCooldownTimer();
     return;
-  }
-  if (cooldownUntil > 0 && cooldownUntil <= now) {
-    chatCount = 0;
-    chatHistory = [];
-    cooldownUntil = 0;
-    saveChat();
   }
   chatHistory.forEach(msg => addMsg(msg.text, msg.role === 'user' ? 'user' : 'bot'));
   if (chatCount >= MAX_CHAT) lockChat();
@@ -347,18 +365,42 @@ function restoreChat() {
 }
 
 function startCooldownTimer() {
-  chatLimit.textContent = 'Tunggu 24 jam untuk chat lagi';
-  const interval = setInterval(() => {
-    const remaining = cooldownUntil - Date.now();
+  if (cooldownTimerInterval) clearInterval(cooldownTimerInterval);
+  document.querySelectorAll('.chat-cooldown').forEach(el => el.remove());
+
+  const cooldownEl = document.createElement('div');
+  cooldownEl.className = 'chat-cooldown';
+  cooldownEl.innerHTML =
+    '<div class="chat-cooldown-top">' +
+      '<i class="fas fa-sun"></i>' +
+      '<span>Reset 07:00</span>' +
+    '</div>' +
+    '<div class="chat-cooldown-time" id="cooldownTime">--:--:--</div>';
+  chatMessages.parentNode.insertBefore(cooldownEl, chatMessages.nextSibling);
+
+  const updateTimer = () => {
+    const remaining = getCooldownRemaining();
     if (remaining <= 0) {
-      clearInterval(interval);
+      clearInterval(cooldownTimerInterval);
+      inCooldown = false;
+      chatCount = 0;
+      chatHistory = [];
+      saveChat();
       location.reload();
       return;
     }
-    const h = Math.floor(remaining / 3600000);
-    const m = Math.floor((remaining % 3600000) / 60000);
-    chatLimit.textContent = 'Bisa chat lagi dalam ' + h + 'j ' + m + 'm';
-  }, 60000);
+    const totalSec = Math.floor(remaining / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+
+    chatLimit.textContent = 'Reset jam 7 pagi — ' + h + 'j ' + m + 'm lagi';
+    const timeEl = document.getElementById('cooldownTime');
+    if (timeEl) timeEl.textContent = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  };
+
+  updateTimer();
+  cooldownTimerInterval = setInterval(updateTimer, 1000);
 }
 
 function updateChatLimit() {
@@ -409,15 +451,15 @@ function removeTyping() {
 function lockChat() {
   chatInput.disabled = true;
   chatSend.disabled = true;
-  if (!cooldownUntil) {
-    cooldownUntil = Date.now() + COOLDOWN_MS;
+  if (!inCooldown) {
+    inCooldown = true;
     saveChat();
   }
   const div = document.createElement('div');
   div.className = 'chat-limit-msg';
   div.textContent = '✕ Batas 5 pertanyaan tercapai. Kembali lagi besok ya!';
   chatMessages.parentNode.insertBefore(div, chatMessages.nextSibling);
-  chatToggle.classList.add('hidden');
+  startCooldownTimer();
 }
 
 async function sendMessage() {
@@ -612,6 +654,37 @@ if (modal) {
   modalClose.addEventListener('click', closeModal);
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
+}
+
+// === Cert Lightbox ===
+const certLightbox = document.getElementById('certLightbox');
+if (certLightbox) {
+  const certLightboxBg = document.getElementById('certLightboxBg');
+  const certLightboxClose = document.getElementById('certLightboxClose');
+  const certLightboxSrc = document.getElementById('certLightboxSrc');
+
+  document.querySelectorAll('.cert-img-wrap').forEach(wrap => {
+    wrap.addEventListener('click', () => {
+      const img = wrap.querySelector('.cert-img');
+      if (img) {
+        certLightboxSrc.src = img.src;
+        certLightboxSrc.alt = img.alt;
+        certLightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+
+  function closeCertLightbox() {
+    certLightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  certLightboxBg.addEventListener('click', closeCertLightbox);
+  certLightboxClose.addEventListener('click', closeCertLightbox);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && certLightbox.classList.contains('active')) closeCertLightbox();
   });
 }
 
