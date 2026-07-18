@@ -3909,17 +3909,14 @@ footer {
   align-items: center;
   justify-content: center;
   cursor: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(16px);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.3);
+  animation: backToTopFloat 3s ease-in-out infinite;
 }
 
-.back-to-top.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+@keyframes backToTopFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 .back-to-top:hover {
