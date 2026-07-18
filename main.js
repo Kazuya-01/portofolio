@@ -2,6 +2,7 @@
 setTimeout(function(){
   var l=document.getElementById('loader');
   if(l)l.style.display='none';
+  if('scrollRestoration' in history) history.scrollRestoration='manual';
   window.scrollTo(0,0);
 },900);
 
@@ -660,10 +661,11 @@ if (navLinkEls.length && sectionEls.length) {
 (function(){
   var b=document.getElementById('backToTop');
   if(!b)return;
+  var c=document.getElementById('contact');
+  if(!c)return;
   function s(){
-    var bottom=window.scrollY+window.innerHeight;
-    var total=document.documentElement.scrollHeight;
-    if(bottom>total*0.75){
+    var rect=c.getBoundingClientRect();
+    if(rect.top<window.innerHeight+100){
       b.classList.add('visible');
     }else{
       b.classList.remove('visible');
@@ -672,6 +674,7 @@ if (navLinkEls.length && sectionEls.length) {
   s();
   setInterval(s,300);
   window.addEventListener('scroll',s,{passive:true});
+  window.addEventListener('resize',s,{passive:true});
   b.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
 })();
 
