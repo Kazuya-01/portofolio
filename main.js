@@ -624,7 +624,7 @@ if (modal) {
 const backToTop = document.getElementById('backToTop');
 if (backToTop) {
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 500) {
+    if (window.scrollY > 300) {
       backToTop.classList.add('visible');
     } else {
       backToTop.classList.remove('visible');
