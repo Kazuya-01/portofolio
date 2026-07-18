@@ -621,15 +621,32 @@ if (modal) {
 }
 
 // === Loader ===
-window.addEventListener('load', () => {
+(function() {
   const loader = document.getElementById('loader');
-  if (loader) {
+  if (!loader) return;
+  let hidden = false;
+  function hideLoader() {
+    if (hidden) return;
+    hidden = true;
     loader.addEventListener('transitionend', () => {
       loader.style.display = 'none';
     }, { once: true });
     loader.classList.add('loaded');
   }
-});
+  // minimum 1.5s display
+  let minOk = false;
+  setTimeout(() => { minOk = true; }, 1500);
+  // check readiness every 200ms after DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    const iv = setInterval(() => {
+      if (minOk) { clearInterval(iv); hideLoader(); }
+    }, 200);
+  });
+  // hide immediately on window.load
+  window.addEventListener('load', hideLoader);
+  // max 3s fallback
+  setTimeout(hideLoader, 3000);
+})();
 
 // === Back to Top ===
 const backToTop = document.getElementById('backToTop');
