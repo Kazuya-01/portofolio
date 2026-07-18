@@ -656,7 +656,7 @@ if (navLinkEls.length && sectionEls.length) {
 (function(){
   var b=document.getElementById('backToTop');
   if(!b)return;
-  function t(){var s=window.pageYOffset||document.documentElement.scrollTop;if(s>window.innerHeight*0.6)b.classList.add('visible');else b.classList.remove('visible')}
+  function t(){var s=window.pageYOffset||document.documentElement.scrollTop;if(s>window.innerHeight*0.3)b.classList.add('visible');else b.classList.remove('visible')}
   t();
   var r=null;
   window.addEventListener('scroll',function(){if(r)cancelAnimationFrame(r);r=requestAnimationFrame(t)},{passive:true});
