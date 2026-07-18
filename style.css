@@ -3936,15 +3936,6 @@ footer {
   width: 100%;
 }
 
-/* === Nav Active Link === */
-.nav-links a.active {
-  color: var(--accent);
-}
-
-.nav-links a.active::after {
-  width: 100%;
-}
-
 @media (max-width: 768px) {
   .back-to-top {
     bottom: 80px;

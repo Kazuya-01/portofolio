@@ -620,40 +620,6 @@ if (modal) {
   });
 }
 
-// === Loader ===
-(function() {
-  const loader = document.getElementById('loader');
-  if (!loader) return;
-  let hidden = false;
-  function hideLoader() {
-    if (hidden) return;
-    hidden = true;
-    loader.addEventListener('transitionend', () => {
-      loader.style.display = 'none';
-    }, { once: true });
-    loader.classList.add('loaded');
-  }
-  // minimum 1.5s display
-  let minOk = false;
-  setTimeout(() => { minOk = true; }, 1500);
-  // poll every 100ms once DOM is ready
-  function startPoll() {
-    const iv = setInterval(() => {
-      if (minOk) { clearInterval(iv); hideLoader(); }
-    }, 100);
-  }
-  // DOMContentLoaded might have already fired (script at end of body)
-  if (document.readyState !== 'loading') {
-    startPoll();
-  } else {
-    document.addEventListener('DOMContentLoaded', startPoll);
-  }
-  // hide immediately on window.load
-  window.addEventListener('load', hideLoader);
-  // max 3s fallback
-  setTimeout(hideLoader, 3000);
-})();
-
 // === Back to Top ===
 const backToTop = document.getElementById('backToTop');
 if (backToTop) {
