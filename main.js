@@ -656,18 +656,18 @@ if (navLinkEls.length && sectionEls.length) {
 (function(){
   var b=document.getElementById('backToTop');
   if(!b)return;
-  var c=document.getElementById('contact');
-  if(!c)return;
-  function t(){
-    if(window.scrollY + window.innerHeight > c.offsetTop + 100){
+  function s(){
+    var bottom=window.scrollY+window.innerHeight;
+    var total=document.documentElement.scrollHeight;
+    if(bottom>total*0.75){
       b.classList.add('visible');
     }else{
       b.classList.remove('visible');
     }
   }
-  t();
-  var r=null;
-  window.addEventListener('scroll',function(){if(r)cancelAnimationFrame(r);r=requestAnimationFrame(t)},{passive:true});
+  s();
+  setInterval(s,300);
+  window.addEventListener('scroll',s,{passive:true});
   b.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
 })();
 
