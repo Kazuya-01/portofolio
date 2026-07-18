@@ -1,10 +1,11 @@
 // === Loader ===
 if('scrollRestoration'in history)history.scrollRestoration='manual';
-document.documentElement.scrollTop=0;
-document.body.scrollTop=0;
+window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
+setTimeout(function(){window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0},100);
 setTimeout(function(){
   var l=document.getElementById('loader');
   if(l)l.style.display='none';
+  window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
 },900);
 
 // === Particles ===
@@ -657,28 +658,6 @@ if (navLinkEls.length && sectionEls.length) {
   }, { passive: true });
   window.addEventListener('load', updateActiveNav);
 }
-
-// === Back to Top ===
-(function(){
-  var b=document.getElementById('backToTop');
-  if(!b)return;
-  var c=document.getElementById('contact');
-  if(!c)return;
-  function s(){
-    var rect=c.getBoundingClientRect();
-    if(rect.top<window.innerHeight+100){
-      b.classList.add('visible');
-    }else{
-      b.classList.remove('visible');
-    }
-  }
-  s();
-  setInterval(s,300);
-  window.addEventListener('scroll',s,{passive:true});
-  window.addEventListener('resize',s,{passive:true});
-  b.onclick=function(){window.scrollTo({top:0,behavior:'smooth'})};
-  setTimeout(function(){b.classList.add('visible')},5000);
-})();
 
 // === Cert image loaded handler ===
 document.querySelectorAll('.cert-img').forEach(img => {
