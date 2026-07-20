@@ -311,16 +311,12 @@ const chatSend = document.getElementById('chatSend');
 const chatLimit = document.getElementById('chatLimit');
 const STORAGE_KEY = 'kuro_chat';
 
-function getNext7AM() {
-  const now = new Date();
-  const next = new Date(now);
-  next.setHours(7, 0, 0, 0);
-  if (now >= next) next.setDate(next.getDate() + 1);
-  return next.getTime();
-}
-
 function getCooldownRemaining() {
-  return getNext7AM() - Date.now();
+  const now = Date.now();
+  const today7am = new Date();
+  today7am.setHours(7, 0, 0, 0);
+  const today7amTime = today7am.getTime();
+  return now < today7amTime ? today7amTime - now : 0;
 }
 
 let saved, chatCount, chatHistory, inCooldown;
